@@ -1,0 +1,55 @@
+---
+import type { GetStaticPaths } from "astro";
+
+import Default from "@layouts/Default.astro"
+import Card from "@components/Card.astro"
+import type {PokeInfo, Result} from "@interfaces/index"
+
+export const getStaticPaths = (async () => {
+ const pokemons = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1302")
+ let pokedex: PokeInfo | null = null
+ let resultsPokes: Result[] | null = null
+ if(pokemons.ok) {
+	 pokedex = await pokemons.json()
+  resultsPokes = pokedex?.results || null
+ }
+
+ if(!resultsPokes) return { paths: [] }; // Return an empty paths array if no results 
+
+ const currentPokemons = resultsPokes.map(result => {
+  const {name, url} = result
+
+  const pokes = {params: {name}, props: {url}}
+  return pokes
+ })
+
+ return currentPokemons
+}) satisfies GetStaticPaths
+
+
+ const {name} = Astro.params 
+ const {url} = Astro.props
+ const id = url.split('/').at(-2)
+ const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+ const roar = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg` 
+---
+<Default title={`Image of ${name} and its roar!`} description={`This is the page from the pokemon: ${name}`} image={image}>
+ <section class="mt-10 mx-auto flex flex-col justify-center items-center">
+  <div>
+   <a href="/">Back</a>
+   <h1 class="capitalize text-5xl">{name}</h1>
+   <Card title={name} url={url} big />
+   <audio controls class="mt-5">
+    <source src={roar} type="audio/ogg">
+    Your Browser does not support this kind of audio
+   </audio>
+  </div>
+ </section>
+</Default>
+
+<style>
+ a {
+  @apply hover:text-blue-500 hover:underline font-bold text-blue-300;
+ }
+</style>
+

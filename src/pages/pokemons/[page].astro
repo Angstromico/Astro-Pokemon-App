@@ -1,0 +1,48 @@
+---
+import type { GetStaticPaths } from "astro";
+import Default from "@layouts/Default.astro"
+import Card from "@components/Card.astro"
+import type {PokeInfo} from "@interfaces/index"
+
+
+
+export const getStaticPaths = (async ({paginate}) => {
+ const pokemons = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1302")
+ const pokedex: PokeInfo | [] = await pokemons.json()
+ const {results} = pokedex
+ 
+
+ //if(!pokedex) return []
+ return paginate( results, {pageSize: 20})
+}) satisfies GetStaticPaths;
+
+const {page} = Astro.props
+---
+
+<Default title='Pokemon List Page' description='The List of all Pokemons is here'>
+	<h1 class="text-3xl text-center">Pokemon's List</h1>
+	<section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-10"  aria-label="Pokemons">
+			{page.data.map((pokemon) => {
+				const {name, url} = pokemon
+
+				return <Card title={name} url={url} />
+			})}
+	</section>
+ <div class="flex my-10 gap-2 items-center justify-between w-full">
+  <a class={`btn ${page.url.prev ? '' : 'disabled'}`} href={page.url.prev ?? page.url.prev}>Previous</a>
+  <span>{page.currentPage}</span>
+  <a class={`btn ${page.url.next ? '' : 'disabled'}`} href={page.url.next ?? page.url.next}>Outcomes</a>
+ </div>
+</Default>
+
+<style>
+ .btn {
+  @apply bg-blue-500 hover:bg-blue-600 rounded-md p-2 text-white font-bold;
+ }
+ .btn.disabled {
+  @apply bg-gray-600 hover:bg-gray-800 text-gray-400;
+ }
+ span {
+  @apply rounded-full bg-gray-800 text-white w-7 h-7 flex justify-center items-center font-bold;
+ }
+</style>

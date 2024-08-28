@@ -1,0 +1,26 @@
+---
+import Default from "@layouts/Default.astro"
+import Card from "@components/Card.astro"
+import type {PokeInfo} from "@interfaces/index"
+
+const pokemons = await fetch("https://pokeapi.co/api/v2/pokemon?limit=40")
+let pokedex: PokeInfo | null = null
+if(pokemons.ok) {
+	 pokedex = await pokemons.json()
+}
+---
+
+<Default>
+	<h1 class="text-3xl text-center">Pokemon's List</h1>
+	<section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-10"  aria-label="Pokemons">
+		
+			{pokedex && pokedex?.results.map((pokemon) => {
+				const {name, url} = pokemon
+
+				return <Card title={name} url={url} />
+			})}
+	</section>
+	<div class="w-full flex justify-center items-center my-5 py-5">
+				<a class="p-2 text-white bg-blue-500 hover:bg-blue-700 font-bold text-3xl rounded-md" href="/pokemons/1">See Them all!</a>
+			</div>
+</Default>

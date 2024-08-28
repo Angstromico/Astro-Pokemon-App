@@ -1,0 +1,17 @@
+---
+import { fade } from 'astro:transitions'
+
+type Props = {
+ title: string
+ url: string
+ big?: boolean
+}
+
+const {title, url, big = false} = Astro.props
+const id = url.split('/').at(-2)
+---
+<a transition:animate={fade({ duration: '0.4s' })} href={`/pokemons/${title}`} class={`w-full rounded flex flex-col justify-center items-center p-2 bg-green-200 mt-5 ${big ? '' : 'border-white border-2'}`}>
+ <h2 class:list={['mb-3 capitalize font-bold text-blue-600', {'text-3xl': big}]}>{title}</h2>
+ <img transition:name={`${title}-image`} class:list={[{'w-36': big}]}  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`} alt="Pokemon">
+</a>
+
