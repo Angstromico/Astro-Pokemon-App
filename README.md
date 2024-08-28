@@ -4,7 +4,7 @@
 npm create astro@latest -- --template minimal
 ```
 
-![Main Image](<[/main.png](https://raw.githubusercontent.com/Angstromico/Astro-Pokemon-App/main/public/main.png)>)
+![Main Image](https://raw.githubusercontent.com/Angstromico/Astro-Pokemon-App/main/public/main.png)
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
 [![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
